@@ -1,0 +1,106 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct Student{
+    int id;
+    int maths;
+    int science;
+    struct Student *next;
+};
+
+void printlist(struct Student *head);
+
+struct Student* push(struct Student *head, int id, int m, int s){
+    
+    struct Student *newNode = malloc(sizeof(struct Student));
+    // insert at front O(1)
+    if(newNode == NULL)
+        return NULL;
+    newNode->id = id;
+    newNode->maths = m;
+    newNode->science = s;
+    newNode->next = head;
+    head = newNode;
+    return head;
+}
+
+struct Student *pop(struct Student *head){
+    
+    if(head == NULL){
+        printf("\n Queue underflowed");
+        return head;
+    }
+    //delete from last O(n)
+    struct Student *temp = head;
+    struct Student *prev = head;
+    
+    if(temp->next == NULL){
+        free(head);
+        head=NULL;
+        return head;
+    }
+    while(temp->next!= NULL){
+        prev=temp;
+        temp=temp->next;
+    }
+    prev->next = NULL;
+    free(temp);
+    return head;
+}
+
+int main()
+{
+    struct Student *head;
+    head=NULL;
+    int ch;
+    while(1){
+        int id,m,s,p;
+        printf("\nEnter 1 to Push");
+        printf("\nEnter 2 to Pop");
+        printf("\nEnter 3 to Display");
+        printf("\nEnter -1 to Exit\n");
+        printf("Enter you choice:  ");
+        scanf("%d",&ch);
+        
+        switch(ch){
+            case 1:
+            printf("\nEnter the ID: ");
+            scanf("%d",&id);
+            printf("\nEnter Marks for Maths and Science  ");
+            scanf("%d %d",&m, &s);
+            head= push(head,id,m,s);
+            
+            break;
+            
+            case 2:
+            head = pop(head);
+            break;
+            
+            case 3:
+            printlist(head);
+            break;
+            
+            case -1:
+            printf("\nExiting the Code");
+            return 0;
+            
+            default:
+            printf("\nWrong choice");
+            
+        }
+    }
+    return 0;
+}
+
+void printlist(struct Student *head){
+    
+    struct Student *temp = head;
+    if(temp==NULL){
+        printf("\nQueue is empty");
+        return;
+    }
+    while(temp !=NULL){
+        printf("\nID: %d\tMaths: %d\tScience: %d\t",temp->id,temp->maths,temp->science);
+        temp=temp->next;
+    }
+    
+}
