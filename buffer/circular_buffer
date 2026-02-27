@@ -1,0 +1,113 @@
+#include <stdio.h>
+#include <stdint.h>
+#define BUFFER_SIZE 8
+
+typedef struct CircularBuffer{
+    uint8_t buffer[BUFFER_SIZE];
+    uint8_t head;
+    uint8_t tail;
+} CircularBuffer;
+
+void cb_init(struct CircularBuffer *cb);
+int cb_is_empty(struct CircularBuffer *cb);
+int cb_is_full(struct CircularBuffer *cb);
+int cb_push(struct CircularBuffer *cb, uint8_t data);
+int cb_pop(struct CircularBuffer *cb, uint8_t *data);
+void cb_print(struct CircularBuffer *cb);
+
+
+
+int main(){
+    CircularBuffer cb;
+    cb_init(&cb);
+    uint8_t ch;
+    uint8_t d;
+    while(1){
+        printf("\n 1 to push \n 2 to pop\n 3 to Display \n 4 to Exit\nEnter your choice ");
+        scanf(" %c",&ch);
+        switch(ch){
+            case '1':
+                printf("Enter data to be pushed");
+                scanf(" %c",&d);
+                if(cb_push(&cb,d)== -1)
+                    printf("\n Failure");
+                else
+                    printf("\n Success");
+                break;
+            
+            case '2':
+                uint8_t c;
+                if(cb_pop(&cb,&c)== -1)
+                    printf("\n Failure");
+                else{
+                    printf("\n Success");
+                    printf("\n Data popped: %c",c);
+                }
+                break;
+            case '3':
+                cb_print(&cb);
+                break;
+            case '4':
+                return 0;
+            default:
+                printf("\n Wrong choice");
+        }
+    }
+    
+}
+
+void cb_init(struct CircularBuffer *cb){
+    cb->head = 0;
+    cb->tail = 0;
+}
+
+int cb_is_empty(struct CircularBuffer *cb){
+    if(cb->head == cb->tail)
+        return 1;
+    else
+        return 0;
+}
+
+int cb_is_full(struct CircularBuffer *cb){
+    if((cb->head+1)%BUFFER_SIZE == cb->tail)
+        return 1;
+    else
+        return 0;
+}
+
+int cb_push(struct CircularBuffer *cb, uint8_t data){
+    if(cb_is_full(cb)){
+        printf("\n Buffer is full");
+        return -1;
+    }
+    else{    
+        cb->buffer[cb->head] = data;
+        cb->head = (cb->head+1)%BUFFER_SIZE;
+    }
+    return 0;
+    
+}
+
+int cb_pop(struct CircularBuffer *cb, uint8_t *data){
+    if(cb_is_empty(cb)){
+        printf("\n buffer is empty");
+        return -1;
+    }
+    else{    
+        *data = cb->buffer[cb->tail];
+        cb->tail = (cb->tail+1)%BUFFER_SIZE;
+    }
+    return 0;
+    
+}
+
+void cb_print(struct CircularBuffer *cb){
+    uint8_t i=cb->tail;
+    if(cb_is_empty(cb))
+        printf("\nBuffer is empty");
+    else
+        while(i!=cb->head){
+            printf("%c , ",cb->buffer[i]);
+            i= (i+1)%BUFFER_SIZE;
+        }
+}
