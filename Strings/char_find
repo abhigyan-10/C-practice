@@ -1,0 +1,26 @@
+//write all the positions of a given character
+
+#include <stdio.h>
+void find_char(char *s, char c);
+
+int main()
+{
+    char s[50],c;
+    printf("Enter a String ");
+    scanf("%s",s);
+    printf("\nEnter a character ");
+    scanf(" %c",&c);
+    find_char(s,c);
+
+    return 0;
+}
+
+void find_char(char *s, char c){
+    int count = 0;
+    while(*s != '\0'){
+        count++;
+        if(*s == c)
+            printf("%d ",count);
+        s++;
+    }
+}
